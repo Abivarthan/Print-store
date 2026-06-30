@@ -56,9 +56,9 @@ function Shop() {
                   <motion.div
                     whileHover={{ scale: 1.05, rotate: -1 }}
                     transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-                    className="absolute inset-0 p-12 text-gold"
+                    className="absolute inset-0"
                   >
-                    <ProductMark kind={p.hero} className="w-full h-full" />
+                    <img src={p.image} alt={p.name} className="w-full h-full object-cover" />
                   </motion.div>
                   <div className="absolute top-4 left-4 text-[10px] uppercase tracking-widest text-muted-foreground">
                     {CATEGORIES.find((c) => c.slug === p.category)?.name}

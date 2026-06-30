@@ -44,7 +44,7 @@ function Hero() {
         className="absolute inset-0 -z-10"
       >
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[900px] rounded-full"
-          style={{ background: "radial-gradient(closest-side, oklch(0.82 0.13 85 / 0.18), transparent 70%)" }} />
+          style={{ background: "radial-gradient(closest-side, color-mix(in oklab, var(--primary) 18%, transparent), transparent 70%)" }} />
       </motion.div>
 
       <div className="max-w-7xl mx-auto px-6 w-full grid lg:grid-cols-[1.3fr_1fr] gap-16 items-center">
@@ -53,10 +53,10 @@ function Hero() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-border bg-card/40 backdrop-blur-sm text-xs"
+            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-primary/20 bg-primary/5 backdrop-blur-sm text-xs"
           >
-            <Sparkles className="w-3 h-3 text-gold" />
-            <span className="text-muted-foreground">Pressed in Jaipur · est. 2014</span>
+            <Sparkles className="w-3 h-3 text-primary" />
+            <span className="text-primary/80 font-medium">Pressed in Jaipur · est. 2014</span>
           </motion.div>
 
           <h1 className="mt-6 font-display text-[clamp(3rem,8vw,7rem)] leading-[0.95] tracking-tight">
@@ -115,7 +115,7 @@ function Hero() {
             </Link>
             <Link
               to="/contact"
-              className="px-6 py-3.5 rounded-full border border-border text-sm hover:bg-white/5 transition-colors"
+              className="px-6 py-3.5 rounded-full border border-border text-sm hover:bg-black/5 transition-colors"
             >
               Request a custom quote
             </Link>
@@ -131,20 +131,20 @@ function Hero() {
           <motion.div
             animate={{ y: [0, -14, 0], rotate: [-3, -1, -3] }}
             transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute inset-0 glass rounded-3xl p-10 shadow-[var(--shadow-card)]"
+            className="absolute inset-0 bg-white/60 backdrop-blur-xl border border-primary/10 rounded-3xl p-10 shadow-[var(--shadow-card)]"
           >
-            <ProductMark kind="card" className="w-full h-full text-gold" />
-            <div className="absolute bottom-6 left-6 right-6 flex justify-between text-xs">
+            <ProductMark kind="card" className="w-full h-full text-primary" />
+            <div className="absolute bottom-6 left-6 right-6 flex justify-between text-xs font-medium">
               <span className="text-muted-foreground">No. 037</span>
-              <span className="text-gold">Cotton 600gsm</span>
+              <span className="text-primary">Cotton 600gsm</span>
             </div>
           </motion.div>
           <motion.div
             animate={{ y: [0, 12, 0], rotate: [6, 8, 6] }}
             transition={{ duration: 9, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-            className="absolute -bottom-8 -right-4 w-2/3 aspect-square glass rounded-3xl p-8"
+            className="absolute -bottom-8 -right-4 w-2/3 aspect-square bg-white/60 backdrop-blur-xl border border-gold/20 rounded-3xl p-8 shadow-[var(--shadow-card)]"
           >
-            <ProductMark kind="envelope" className="w-full h-full text-gold-soft" />
+            <ProductMark kind="envelope" className="w-full h-full text-gold" />
           </motion.div>
         </motion.div>
       </div>
@@ -168,7 +168,7 @@ function Marquee() {
         {[...items, ...items, ...items].map((t, i) => (
           <span key={i} className="flex items-center gap-16">
             <span>{t}</span>
-            <span className="text-gold">✦</span>
+            <span className="text-primary">✦</span>
           </span>
         ))}
       </motion.div>
@@ -181,7 +181,7 @@ function Categories() {
     <section className="max-w-7xl mx-auto px-6 py-32">
       <div className="flex items-end justify-between flex-wrap gap-6 mb-14">
         <div>
-          <div className="text-xs uppercase tracking-widest text-gold mb-3">01 — Catalogue</div>
+          <div className="text-xs uppercase tracking-widest text-primary mb-3 font-semibold">01 — Catalogue</div>
           <h2 className="font-display text-5xl md:text-6xl leading-[1.05] max-w-2xl">
             Six rooms in the atelier.
           </h2>
@@ -204,15 +204,15 @@ function Categories() {
               to="/shop"
               className="group relative block aspect-[4/5] rounded-3xl border border-border overflow-hidden p-8 hover:border-gold/40 transition-colors"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-card via-card/40 to-transparent" />
-              <div className="absolute inset-0 opacity-30 group-hover:opacity-50 transition-opacity">
-                <ProductMark kind={["card","letter","brochure","box","book","poster"][i % 6]} className="w-full h-full text-gold" />
+              <div className="absolute inset-0 bg-black">
+                <img src={c.image} alt={c.name} className="w-full h-full object-cover opacity-60 transition-transform duration-700 group-hover:scale-105 group-hover:opacity-80" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
               </div>
-              <div className="relative h-full flex flex-col justify-between">
-                <span className="text-xs text-muted-foreground">0{i + 1}</span>
+              <div className="relative h-full flex flex-col justify-between text-white">
+                <span className="text-xs text-white/60">0{i + 1}</span>
                 <div>
                   <div className="font-display text-3xl mb-2 group-hover:translate-x-1 transition-transform">{c.name}</div>
-                  <p className="text-sm text-muted-foreground max-w-[22ch]">{c.blurb}</p>
+                  <p className="text-sm text-white/80 max-w-[22ch]">{c.blurb}</p>
                 </div>
               </div>
             </Link>
@@ -233,7 +233,7 @@ function Process() {
   return (
     <section className="bg-card/40 border-y border-border">
       <div className="max-w-7xl mx-auto px-6 py-32">
-        <div className="text-xs uppercase tracking-widest text-gold mb-3">02 — Process</div>
+        <div className="text-xs uppercase tracking-widest text-primary mb-3 font-semibold">02 — Process</div>
         <h2 className="font-display text-5xl md:text-6xl leading-[1.05] max-w-2xl mb-16">
           Four steps. No shortcuts.
         </h2>
@@ -266,7 +266,7 @@ function Featured() {
     <section className="max-w-7xl mx-auto px-6 py-32">
       <div className="flex items-end justify-between flex-wrap gap-6 mb-14">
         <div>
-          <div className="text-xs uppercase tracking-widest text-gold mb-3">03 — Selected works</div>
+          <div className="text-xs uppercase tracking-widest text-primary mb-3 font-semibold">03 — Selected works</div>
           <h2 className="font-display text-5xl md:text-6xl leading-[1.05] max-w-2xl">
             New from the press.
           </h2>
@@ -287,13 +287,13 @@ function Featured() {
               className="group block"
             >
               <div className="aspect-[4/5] rounded-2xl border border-border bg-card/60 overflow-hidden mb-4 relative">
-                <motion.div whileHover={{ scale: 1.04 }} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }} className="absolute inset-0 p-10 text-gold">
-                  <ProductMark kind={p.hero} className="w-full h-full" />
+                <motion.div whileHover={{ scale: 1.04 }} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }} className="absolute inset-0">
+                  <img src={p.image} alt={p.name} className="w-full h-full object-cover" />
                 </motion.div>
               </div>
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <div className="font-display text-lg leading-tight group-hover:text-gold transition-colors">{p.name}</div>
+                  <div className="font-display text-lg leading-tight group-hover:text-primary transition-colors">{p.name}</div>
                   <p className="text-xs text-muted-foreground mt-1">{p.tagline}</p>
                 </div>
                 <span className="text-sm whitespace-nowrap">from ₹{p.basePrice}</span>
@@ -311,7 +311,7 @@ function CTA() {
     <section className="max-w-7xl mx-auto px-6 py-24">
       <div className="relative rounded-3xl border border-border p-12 md:p-20 overflow-hidden">
         <div className="absolute inset-0 -z-10 opacity-60"
-          style={{ background: "radial-gradient(60% 80% at 80% 20%, oklch(0.82 0.13 85 / 0.18), transparent 60%)" }} />
+          style={{ background: "radial-gradient(60% 80% at 80% 20%, color-mix(in oklab, var(--primary) 18%, transparent), transparent 60%)" }} />
         <div className="max-w-3xl">
           <h3 className="font-display text-4xl md:text-6xl leading-[1.05]">
             Press something <span className="italic text-gold-gradient">unforgettable</span>.
@@ -320,10 +320,10 @@ function CTA() {
             Whether it's a hundred wedding invitations or a thousand catalogues, we'd love to print it.
           </p>
           <div className="mt-10 flex flex-wrap gap-3">
-            <Link to="/shop" className="px-6 py-3.5 rounded-full bg-gold text-ink font-medium hover:bg-gold-soft transition-colors">
+            <Link to="/shop" className="px-6 py-3.5 rounded-full bg-primary text-white font-medium hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20">
               Start your order
             </Link>
-            <Link to="/contact" className="px-6 py-3.5 rounded-full border border-border hover:bg-white/5 transition-colors text-sm">
+            <Link to="/contact" className="px-6 py-3.5 rounded-full border border-border hover:bg-black/5 transition-colors text-sm">
               Talk to the press
             </Link>
           </div>

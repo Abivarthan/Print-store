@@ -15,7 +15,7 @@ const links = [
 
 export function Nav() {
   const { scrollY } = useScroll();
-  const bg = useTransform(scrollY, [0, 80], ["oklch(0.08 0.005 80 / 0)", "oklch(0.08 0.005 80 / 0.85)"]);
+  const bg = useTransform(scrollY, [0, 80], ["oklch(1 1 1 / 0)", "oklch(1 1 1 / 0.85)"]);
   const border = useTransform(scrollY, [0, 80], ["oklch(1 0 0 / 0)", "oklch(1 0 0 / 0.08)"]);
   const count = useCart((s) => s.items.length);
   const path = useRouterState({ select: (r) => r.location.pathname });
@@ -30,11 +30,11 @@ export function Nav() {
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2 group">
           <motion.div
-            className="w-8 h-8 rounded-full bg-gradient-to-br from-gold to-gold-soft"
+            className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-secondary shadow-sm"
             whileHover={{ rotate: 180 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           />
-          <span className="font-display text-xl tracking-tight">Maison Presse</span>
+          <span className="font-display text-xl tracking-tight text-foreground">Colour Print</span>
         </Link>
 
         <nav className="hidden md:flex items-center gap-1">
@@ -49,7 +49,7 @@ export function Nav() {
                 {active && (
                   <motion.span
                     layoutId="nav-active"
-                    className="absolute inset-0 rounded-full bg-white/5"
+                    className="absolute inset-0 rounded-full bg-primary/10"
                     transition={{ type: "spring", stiffness: 380, damping: 30 }}
                   />
                 )}
@@ -63,7 +63,7 @@ export function Nav() {
           {isStaff && (
             <Link
               to="/admin"
-              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 mr-1 rounded-full text-xs text-gold border border-gold/30 hover:bg-gold/10 transition-colors"
+              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 mr-1 rounded-full text-xs text-primary border border-primary/30 hover:bg-primary/10 transition-colors"
               aria-label="Admin"
             >
               <ShieldCheck className="w-3.5 h-3.5" />
@@ -72,17 +72,17 @@ export function Nav() {
           )}
           <Link
             to={session ? "/artworks" : "/auth"}
-            className="p-2 rounded-full text-muted-foreground hover:text-foreground hover:bg-white/5 transition-colors"
+            className="p-2 rounded-full text-muted-foreground hover:text-foreground hover:bg-black/5 transition-colors"
             aria-label={session ? "My account" : "Sign in"}
           >
             <UserIcon className="w-4 h-4" />
           </Link>
-          <button className="p-2 rounded-full text-muted-foreground hover:text-foreground hover:bg-white/5 transition-colors" aria-label="Search">
+          <button className="p-2 rounded-full text-muted-foreground hover:text-foreground hover:bg-black/5 transition-colors" aria-label="Search">
             <Search className="w-4 h-4" />
           </button>
           <button
             onClick={() => cart.toggle()}
-            className="relative p-2 rounded-full text-muted-foreground hover:text-foreground hover:bg-white/5 transition-colors"
+            className="relative p-2 rounded-full text-muted-foreground hover:text-foreground hover:bg-black/5 transition-colors"
             aria-label={`Cart with ${count} items`}
           >
             <ShoppingBag className="w-4 h-4" />
@@ -90,7 +90,7 @@ export function Nav() {
               <motion.span
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
-                className="absolute -top-0.5 -right-0.5 min-w-4 h-4 px-1 rounded-full bg-gold text-[10px] font-medium text-ink flex items-center justify-center"
+                className="absolute -top-0.5 -right-0.5 min-w-4 h-4 px-1 rounded-full bg-primary text-[10px] font-medium text-white flex items-center justify-center"
               >
                 {count}
               </motion.span>
@@ -98,7 +98,7 @@ export function Nav() {
           </button>
           <Link
             to="/shop"
-            className="ml-2 hidden sm:inline-flex items-center px-4 py-2 rounded-full bg-gold text-ink text-sm font-medium hover:bg-gold-soft transition-colors"
+            className="ml-2 hidden sm:inline-flex items-center px-4 py-2 rounded-full bg-primary text-white text-sm font-medium hover:bg-primary/90 transition-colors shadow-md shadow-primary/20"
           >
             Order
           </Link>

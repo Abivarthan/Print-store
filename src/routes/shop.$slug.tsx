@@ -99,13 +99,9 @@ function Detail({ product }: { product: Product }) {
           className="lg:sticky lg:top-24 self-start"
         >
           <div className="aspect-[4/5] rounded-3xl border border-border bg-card/60 relative overflow-hidden">
-            <motion.div
-              animate={{ y: [0, -10, 0] }}
-              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute inset-0 p-16 text-gold"
-            >
-              <ProductMark kind={product.hero} className="w-full h-full" />
-            </motion.div>
+            <div className="absolute inset-0">
+              <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
+            </div>
             <div className="absolute top-6 left-6 text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
               No. {product.slug.split("-").length.toString().padStart(2, "0")}
             </div>

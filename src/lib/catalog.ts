@@ -6,6 +6,7 @@ export type Product = {
   basePrice: number; // INR, per unit at base config
   minQty: number;
   hero: string; // emoji or icon hint
+  image: string; // url to image
   description: string;
   options: {
     sizes: { id: string; label: string; mult: number }[];
@@ -41,12 +42,12 @@ const defaultOptions: Product["options"] = {
 };
 
 export const CATEGORIES = [
-  { slug: "cards", name: "Business Cards", blurb: "Calling cards that arrive before you do." },
-  { slug: "stationery", name: "Stationery", blurb: "Letterheads, envelopes, notepads." },
-  { slug: "marketing", name: "Marketing", blurb: "Brochures, flyers, posters." },
-  { slug: "packaging", name: "Packaging", blurb: "Boxes, labels, wraps." },
-  { slug: "books", name: "Books & Zines", blurb: "Perfect-bound, saddle-stitched, hardcover." },
-  { slug: "signage", name: "Signage", blurb: "Standees, banners, foam boards." },
+  { slug: "cards", name: "Business Cards", blurb: "Calling cards that arrive before you do.", image: "https://images.unsplash.com/photo-1572948174548-a006dbb20757?auto=format&fit=crop&q=80&w=800" },
+  { slug: "stationery", name: "Stationery", blurb: "Letterheads, envelopes, notepads.", image: "https://images.unsplash.com/photo-1586075010923-2dd4570fb338?auto=format&fit=crop&q=80&w=800" },
+  { slug: "marketing", name: "Marketing", blurb: "Brochures, flyers, posters.", image: "https://images.unsplash.com/photo-1621245053155-24e5b41fae0a?auto=format&fit=crop&q=80&w=800" },
+  { slug: "packaging", name: "Packaging", blurb: "Boxes, labels, wraps.", image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=800" },
+  { slug: "books", name: "Books & Zines", blurb: "Perfect-bound, saddle-stitched, hardcover.", image: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&q=80&w=800" },
+  { slug: "signage", name: "Signage", blurb: "Standees, banners, foam boards.", image: "https://images.unsplash.com/photo-1599321312389-9b936d90aee2?auto=format&fit=crop&q=80&w=800" },
 ];
 
 export const PRODUCTS: Product[] = [
@@ -58,6 +59,7 @@ export const PRODUCTS: Product[] = [
     basePrice: 12,
     minQty: 100,
     hero: "card",
+    image: "https://images.unsplash.com/photo-1589330694653-efa633096b79?auto=format&fit=crop&q=80&w=800",
     description:
       "A calling card carved from 600gsm pressed cotton, finished with hand-applied gold foil. A first impression that lingers long after the handshake.",
     options: defaultOptions,
@@ -70,6 +72,7 @@ export const PRODUCTS: Product[] = [
     basePrice: 18,
     minQty: 100,
     hero: "press",
+    image: "https://images.unsplash.com/photo-1572948174548-a006dbb20757?auto=format&fit=crop&q=80&w=800",
     description: "Heritage letterpress on Italian cotton. Each card individually pressed.",
     options: defaultOptions,
   },
@@ -81,6 +84,7 @@ export const PRODUCTS: Product[] = [
     basePrice: 6,
     minQty: 100,
     hero: "letter",
+    image: "https://images.unsplash.com/photo-1586075010923-2dd4570fb338?auto=format&fit=crop&q=80&w=800",
     description: "A4 letterhead on archival mould-made stock. For correspondence that endures.",
     options: {
       ...defaultOptions,
@@ -98,6 +102,7 @@ export const PRODUCTS: Product[] = [
     basePrice: 9,
     minQty: 50,
     hero: "envelope",
+    image: "https://images.unsplash.com/photo-1596766099307-2c9ccae6b1c7?auto=format&fit=crop&q=80&w=800",
     description: "Pointed-flap envelopes with optional foil-stamped monogram and patterned lining.",
     options: defaultOptions,
   },
@@ -109,6 +114,7 @@ export const PRODUCTS: Product[] = [
     basePrice: 32,
     minQty: 50,
     hero: "brochure",
+    image: "https://images.unsplash.com/photo-1621245053155-24e5b41fae0a?auto=format&fit=crop&q=80&w=800",
     description: "A4 brochures with editorial-grade printing, perfect for studios and galleries.",
     options: defaultOptions,
   },
@@ -120,6 +126,7 @@ export const PRODUCTS: Product[] = [
     basePrice: 240,
     minQty: 1,
     hero: "poster",
+    image: "https://images.unsplash.com/photo-1610471206894-39f88c5efba7?auto=format&fit=crop&q=80&w=800",
     description: "Giclée-grade large-format prints on cotton rag. Built to be framed.",
     options: {
       ...defaultOptions,
@@ -138,6 +145,7 @@ export const PRODUCTS: Product[] = [
     basePrice: 180,
     minQty: 25,
     hero: "box",
+    image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=800",
     description: "Two-piece rigid boxes wrapped in fine art paper with optional ribbon pull.",
     options: defaultOptions,
   },
@@ -149,6 +157,7 @@ export const PRODUCTS: Product[] = [
     basePrice: 1200,
     minQty: 10,
     hero: "book",
+    image: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&q=80&w=800",
     description: "Hardcover books with sewn bindings and printed endpapers. Limited runs.",
     options: defaultOptions,
   },
