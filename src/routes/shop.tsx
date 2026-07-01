@@ -1,107 +1,136 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { motion } from "framer-motion";
-import { useState } from "react";
-import { SiteLayout } from "@/components/site/Layout";
-import { ProductMark } from "@/components/site/ProductMark";
-import { CATEGORIES, PRODUCTS } from "@/lib/catalog";
+import { createFileRoute } from "@tanstack/react-router";
+import { useMemo, useState } from "react";
+import { Filter, X } from "lucide-react";
+import { CATEGORIES, PRODUCTS } from "@/data/catalog";
+import { ProductCard } from "@/components/site/ProductCard";
+import { Breadcrumbs } from "@/components/site/Breadcrumbs";
+import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/shop")({
   head: () => ({
     meta: [
-      { title: "Shop — Maison Presse" },
-      { name: "description", content: "Letterpress cards, monogrammed stationery, rigid packaging, hardcover books. Configure paper, finish, and quantity." },
-      { property: "og:title", content: "Shop — Maison Presse" },
-      { property: "og:description", content: "Configure paper, finish, and quantity. Live pricing in INR with GST." },
+      { title: "Shop — Metier" },
+      { name: "description", content: "Browse Metier's full range: cotton business cards, invitations, packaging, stickers, marketing print and more." },
+      { property: "og:title", content: "Shop — Metier" },
+      { property: "og:url", content: "/shop" },
     ],
+    links: [{ rel: "canonical", href: "/shop" }],
   }),
   component: Shop,
 });
 
+const GROUPS = ["Business", "Marketing", "Packaging", "Invitations", "Gifts", "Services"] as const;
+const SORTS = ["Featured", "Price ↑", "Price ↓", "Top rated"] as const;
+
 function Shop() {
-  const [cat, setCat] = useState<string>("all");
-  const filtered = cat === "all" ? PRODUCTS : PRODUCTS.filter((p) => p.category === cat);
+  const [group, setGroup] = useState<string | null>(null);
+  const [sort, setSort] = useState<(typeof SORTS)[number]>("Featured");
+  const [max, setMax] = useState(200);
+  const [drawer, setDrawer] = useState(false);
+  const [page, setPage] = useState(1);
+  const PER = 8;
 
-  return (
-    <SiteLayout>
-      <section className="max-w-7xl mx-auto px-6 pt-20 pb-12">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-          <div className="text-xs uppercase tracking-widest text-gold mb-4">The catalogue</div>
-          <h1 className="font-display text-6xl md:text-7xl leading-[0.95]">
-            Everything we press.
-          </h1>
-        </motion.div>
-      </section>
+  const filtered = useMemo(() => {
+    let list = [...PRODUCTS];
+    if (group) {
+      const catSlugs = CATEGORIES.filter((c) => c.group === group).map((c) => c.slug);
+      list = list.filter((p) => catSlugs.includes(p.categorySlug));
+    }
+    list = list.filter((p) => p.price <= max);
+    if (sort === "Price ↑") list.sort((a, b) => a.price - b.price);
+    if (sort === "Price ↓") list.sort((a, b) => b.price - a.price);
+    if (sort === "Top rated") list.sort((a, b) => b.rating - a.rating);
+    return list;
+  }, [group, max, sort]);
 
-      <section className="sticky top-16 z-30 backdrop-blur-xl bg-background/70 border-y border-border">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex gap-2 overflow-x-auto">
-          <FilterPill active={cat === "all"} onClick={() => setCat("all")} label="All" />
-          {CATEGORIES.map((c) => (
-            <FilterPill key={c.slug} active={cat === c.slug} onClick={() => setCat(c.slug)} label={c.name} />
+  const pageCount = Math.max(1, Math.ceil(filtered.length / PER));
+  const shown = filtered.slice((page - 1) * PER, page * PER);
+
+  const FilterPanel = () => (
+    <div className="space-y-8">
+      <div>
+        <h4 className="font-display font-bold text-burgundy mb-3">Category</h4>
+        <div className="space-y-1.5">
+          <button
+            onClick={() => { setGroup(null); setPage(1); }}
+            className={cn("block w-full text-left text-sm py-1.5 px-3 rounded-lg transition-colors",
+              !group ? "bg-burgundy text-white" : "hover:bg-burgundy/5 text-ink/70")}
+          >All categories</button>
+          {GROUPS.map((g) => (
+            <button
+              key={g}
+              onClick={() => { setGroup(g); setPage(1); }}
+              className={cn("block w-full text-left text-sm py-1.5 px-3 rounded-lg transition-colors",
+                group === g ? "bg-burgundy text-white" : "hover:bg-burgundy/5 text-ink/70")}
+            >{g}</button>
           ))}
         </div>
-      </section>
-
-      <section className="max-w-7xl mx-auto px-6 py-16">
-        <motion.div layout className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filtered.map((p, i) => (
-            <motion.div
-              key={p.slug}
-              layout
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: i * 0.04 }}
-            >
-              <Link to="/shop/$slug" params={{ slug: p.slug }} className="group block">
-                <div className="relative aspect-[4/5] rounded-2xl border border-border bg-card/60 overflow-hidden mb-4">
-                  <motion.div
-                    whileHover={{ scale: 1.05, rotate: -1 }}
-                    transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-                    className="absolute inset-0"
-                  >
-                    <img src={p.image} alt={p.name} className="w-full h-full object-cover" />
-                  </motion.div>
-                  <div className="absolute top-4 left-4 text-[10px] uppercase tracking-widest text-muted-foreground">
-                    {CATEGORIES.find((c) => c.slug === p.category)?.name}
-                  </div>
-                  <div className="absolute bottom-4 right-4 text-xs px-2.5 py-1 rounded-full border border-border bg-background/60 backdrop-blur opacity-0 group-hover:opacity-100 transition-opacity">
-                    Configure →
-                  </div>
-                </div>
-                <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <div className="font-display text-xl leading-tight group-hover:text-gold transition-colors">{p.name}</div>
-                    <p className="text-xs text-muted-foreground mt-1">{p.tagline}</p>
-                  </div>
-                  <div className="text-right text-sm">
-                    <div className="text-muted-foreground text-[11px]">from</div>
-                    <div className="font-display text-lg">₹{p.basePrice}</div>
-                  </div>
-                </div>
-              </Link>
-            </motion.div>
-          ))}
-        </motion.div>
-      </section>
-    </SiteLayout>
+      </div>
+      <div>
+        <h4 className="font-display font-bold text-burgundy mb-3">Max price: <span className="text-gold">${max}</span></h4>
+        <input type="range" min={5} max={200} step={5} value={max} onChange={(e) => setMax(+e.target.value)} className="w-full accent-burgundy" />
+      </div>
+    </div>
   );
-}
 
-function FilterPill({ active, onClick, label }: { active: boolean; onClick: () => void; label: string }) {
   return (
-    <button
-      onClick={onClick}
-      className={`relative shrink-0 px-4 py-2 rounded-full text-sm transition-colors ${
-        active ? "text-ink" : "text-muted-foreground hover:text-foreground"
-      }`}
-    >
-      {active && (
-        <motion.span
-          layoutId="filter-active"
-          className="absolute inset-0 rounded-full bg-gold"
-          transition={{ type: "spring", stiffness: 380, damping: 30 }}
-        />
+    <div className="max-w-7xl mx-auto px-6 py-12">
+      <Breadcrumbs items={[{ label: "Shop" }]} />
+      <div className="flex items-end justify-between gap-4 mb-10 flex-wrap">
+        <div>
+          <h1 className="font-display text-4xl md:text-5xl font-bold text-burgundy">Shop everything</h1>
+          <p className="text-ink/60 mt-2">{filtered.length} products • Bespoke reproduction available on every item.</p>
+        </div>
+        <div className="flex items-center gap-3">
+          <button onClick={() => setDrawer(true)} className="lg:hidden flex items-center gap-2 border border-burgundy/20 rounded-full px-4 py-2 text-sm">
+            <Filter className="h-4 w-4" /> Filters
+          </button>
+          <select
+            value={sort}
+            onChange={(e) => setSort(e.target.value as typeof sort)}
+            className="border border-burgundy/20 rounded-full px-4 py-2 text-sm bg-white"
+          >
+            {SORTS.map((s) => <option key={s}>{s}</option>)}
+          </select>
+        </div>
+      </div>
+
+      <div className="grid lg:grid-cols-[240px_1fr] gap-10">
+        <aside className="hidden lg:block sticky top-28 self-start"><FilterPanel /></aside>
+        <div>
+          {shown.length === 0 ? (
+            <div className="text-center py-20 text-ink/50">No products match those filters.</div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              {shown.map((p) => <ProductCard key={p.slug} product={p} />)}
+            </div>
+          )}
+          {pageCount > 1 && (
+            <div className="flex justify-center items-center gap-2 mt-12">
+              {Array.from({ length: pageCount }).map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setPage(i + 1)}
+                  className={cn("size-10 rounded-full text-sm font-bold transition-colors",
+                    page === i + 1 ? "bg-burgundy text-white" : "border border-burgundy/20 hover:bg-burgundy/5")}
+                >{i + 1}</button>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {drawer && (
+        <div className="fixed inset-0 z-50 bg-ink/40 lg:hidden" onClick={() => setDrawer(false)}>
+          <div className="absolute right-0 top-0 bottom-0 w-80 max-w-[85vw] bg-cream p-6 overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="font-display font-bold text-burgundy text-lg">Filters</h3>
+              <button onClick={() => setDrawer(false)} aria-label="Close"><X className="h-5 w-5" /></button>
+            </div>
+            <FilterPanel />
+          </div>
+        </div>
       )}
-      <span className="relative">{label}</span>
-    </button>
+    </div>
   );
 }

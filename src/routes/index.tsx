@@ -1,334 +1,235 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
-import { ArrowUpRight, Sparkles } from "lucide-react";
-import { SiteLayout } from "@/components/site/Layout";
-import { ProductMark } from "@/components/site/ProductMark";
-import { CATEGORIES, PRODUCTS } from "@/lib/catalog";
+import { ArrowRight, Award, Sparkles, Truck } from "lucide-react";
+// framer-motion available but hero uses CSS animation to avoid SSR flash
+import { CATEGORIES, FAQS, PRODUCTS, TESTIMONIALS } from "@/data/catalog";
+import { ProductCard } from "@/components/site/ProductCard";
+import heroFoil from "@/assets/hero-foil.jpg";
+import varnish from "@/assets/varnish.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Maison Presse — Print, pressed in India" },
-      { name: "description", content: "Premium printing atelier. Letterpress business cards, monogrammed stationery, rigid packaging, hardcover books. Shipped worldwide." },
-      { property: "og:title", content: "Maison Presse — Print, pressed in India" },
-      { property: "og:description", content: "Letterpress, foil, cotton stock, rigid packaging. Pressed in Jaipur." },
+      { title: "Metier — Tactile print for discerning brands" },
+      { name: "description", content: "Cotton business cards, wedding invitations, packaging, marketing print — crafted with letterpress, foil, and edge-painted finishes." },
+      { property: "og:title", content: "Metier — Tactile print for discerning brands" },
+      { property: "og:description", content: "Cotton stocks, foil accents, custom packaging. Crafted since 1994." },
+      { property: "og:url", content: "/" },
     ],
+    links: [{ rel: "canonical", href: "/" }],
   }),
-  component: Index,
+  component: Home,
 });
 
-function Index() {
-  return (
-    <SiteLayout>
-      <Hero />
-      <Marquee />
-      <Categories />
-      <Process />
-      <Featured />
-      <CTA />
-    </SiteLayout>
-  );
-}
+const chips = ["Cotton Papers", "Hot Foil", "Edge Painting", "Custom Die-Cuts", "Duplexing", "Letterpress"];
 
-function Hero() {
-  const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
-  const y = useTransform(scrollYProgress, [0, 1], [0, 160]);
-  const opacity = useTransform(scrollYProgress, [0, 1], [1, 0]);
+function Home() {
+  const bestsellers = PRODUCTS.slice(0, 4);
+  const arrivals = PRODUCTS.slice(4, 8);
+  const featured = CATEGORIES.slice(0, 6);
 
   return (
-    <section ref={ref} className="relative min-h-[92vh] flex items-center overflow-hidden">
-      <motion.div
-        style={{ y, opacity }}
-        className="absolute inset-0 -z-10"
-      >
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[900px] rounded-full"
-          style={{ background: "radial-gradient(closest-side, color-mix(in oklab, var(--primary) 18%, transparent), transparent 70%)" }} />
-      </motion.div>
+    <div className="max-w-7xl mx-auto px-6 py-8">
+      {/* Bento Hero */}
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:h-[640px] fade-up">
 
-      <div className="max-w-7xl mx-auto px-6 w-full grid lg:grid-cols-[1.3fr_1fr] gap-16 items-center">
-        <div>
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-primary/20 bg-primary/5 backdrop-blur-sm text-xs"
-          >
-            <Sparkles className="w-3 h-3 text-primary" />
-            <span className="text-primary/80 font-medium">Pressed in Jaipur · est. 2014</span>
-          </motion.div>
-
-          <h1 className="mt-6 font-display text-[clamp(3rem,8vw,7rem)] leading-[0.95] tracking-tight">
-            {"The art of".split("").map((c, i) => (
-              <motion.span
-                key={i}
-                initial={{ opacity: 0, y: 40 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 + i * 0.025, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-                className="inline-block"
-              >
-                {c === " " ? "\u00A0" : c}
-              </motion.span>
-            ))}
-            <br />
-            <motion.span
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.6, duration: 1 }}
-              className="italic gold-shimmer"
-            >
-              printing
-            </motion.span>
-            <motion.span
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.7, duration: 0.6 }}
-              className="inline-block"
-            >
-              , refined.
-            </motion.span>
-          </h1>
-
-          <motion.p
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1, duration: 0.6 }}
-            className="mt-8 max-w-lg text-base text-muted-foreground leading-relaxed"
-          >
-            A small atelier. Cotton stock. Hand-poured ink. Foil pressed by feel.
-            Order one card or a thousand books — we treat them the same.
-          </motion.p>
-
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.15, duration: 0.6 }}
-            className="mt-10 flex flex-wrap items-center gap-3"
-          >
+        <div className="md:col-span-8 group relative overflow-hidden rounded-3xl bg-burgundy bento-drop flex flex-col">
+          <div className="p-8 md:p-10 z-10">
+            <h1 className="font-display text-4xl sm:text-5xl md:text-7xl font-bold text-white text-balance leading-[0.9] mb-6">
+              Physicality <br /><span className="text-gold">in every grain.</span>
+            </h1>
+            <p className="text-white/70 max-w-md text-base md:text-lg leading-relaxed mb-8">
+              Premium cardstock meeting precision foil-stamping. Experience the tactile standard of high-craft printing.
+            </p>
             <Link
               to="/shop"
-              className="group inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-gold text-ink font-medium hover:bg-gold-soft transition-all hover:gap-3"
+              className="inline-flex items-center gap-2 bg-gold text-white px-8 py-4 rounded-full font-bold text-sm tracking-widest uppercase hover:bg-white hover:text-burgundy transition-all duration-500 shadow-xl"
             >
-              Explore the press
-              <ArrowUpRight className="w-4 h-4 transition-transform group-hover:rotate-45" />
+              Sample the Collection <ArrowRight className="h-4 w-4" />
             </Link>
-            <Link
-              to="/contact"
-              className="px-6 py-3.5 rounded-full border border-border text-sm hover:bg-black/5 transition-colors"
-            >
-              Request a custom quote
-            </Link>
-          </motion.div>
-        </div>
-
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.4, duration: 1, ease: [0.22, 1, 0.36, 1] }}
-          className="relative aspect-[3/4] hidden lg:block"
-        >
-          <motion.div
-            animate={{ y: [0, -14, 0], rotate: [-3, -1, -3] }}
-            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute inset-0 bg-white/60 backdrop-blur-xl border border-primary/10 rounded-3xl p-10 shadow-[var(--shadow-card)]"
-          >
-            <ProductMark kind="card" className="w-full h-full text-primary" />
-            <div className="absolute bottom-6 left-6 right-6 flex justify-between text-xs font-medium">
-              <span className="text-muted-foreground">No. 037</span>
-              <span className="text-primary">Cotton 600gsm</span>
+          </div>
+          <div className="mt-auto px-6 pb-6 w-full">
+            <div className="w-full aspect-[16/7] rounded-2xl overflow-hidden ring-1 ring-white/10">
+              <img src={heroFoil} alt="Gold foil embossed business cards" className="w-full h-full object-cover" width={1600} height={700} />
             </div>
-          </motion.div>
-          <motion.div
-            animate={{ y: [0, 12, 0], rotate: [6, 8, 6] }}
-            transition={{ duration: 9, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-            className="absolute -bottom-8 -right-4 w-2/3 aspect-square bg-white/60 backdrop-blur-xl border border-gold/20 rounded-3xl p-8 shadow-[var(--shadow-card)]"
-          >
-            <ProductMark kind="envelope" className="w-full h-full text-gold" />
-          </motion.div>
-        </motion.div>
-      </div>
-
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
-        Scroll
-      </div>
-    </section>
-  );
-}
-
-function Marquee() {
-  const items = ["Letterpress", "Foil stamp", "Pressed cotton", "Spot UV", "Smyth-sewn", "Edge gilding", "Embossing", "Giclée"];
-  return (
-    <section aria-hidden className="py-10 border-y border-border overflow-hidden">
-      <motion.div
-        animate={{ x: ["0%", "-50%"] }}
-        transition={{ duration: 40, ease: "linear", repeat: Infinity }}
-        className="flex gap-16 whitespace-nowrap font-display text-3xl text-muted-foreground/40"
-      >
-        {[...items, ...items, ...items].map((t, i) => (
-          <span key={i} className="flex items-center gap-16">
-            <span>{t}</span>
-            <span className="text-primary">✦</span>
-          </span>
-        ))}
-      </motion.div>
-    </section>
-  );
-}
-
-function Categories() {
-  return (
-    <section className="max-w-7xl mx-auto px-6 py-32">
-      <div className="flex items-end justify-between flex-wrap gap-6 mb-14">
-        <div>
-          <div className="text-xs uppercase tracking-widest text-primary mb-3 font-semibold">01 — Catalogue</div>
-          <h2 className="font-display text-5xl md:text-6xl leading-[1.05] max-w-2xl">
-            Six rooms in the atelier.
-          </h2>
+          </div>
         </div>
-        <Link to="/shop" className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-2">
-          See all <ArrowUpRight className="w-4 h-4" />
-        </Link>
+
+        <div className="md:col-span-4 grid grid-rows-2 gap-6">
+          <Link to="/category/$slug" params={{ slug: "business-cards" }} className="bg-white rounded-3xl p-8 bento-drop border border-burgundy/5 flex flex-col justify-between hover:shadow-lift transition-all">
+            <div>
+              <span className="text-gold font-display font-bold text-xs tracking-widest uppercase">Featured Tech</span>
+              <h3 className="text-2xl font-display font-bold text-burgundy mt-2">3D Spot Varnish</h3>
+            </div>
+            <div className="w-full aspect-video rounded-xl overflow-hidden ring-1 ring-black/5 mt-4">
+              <img src={varnish} alt="Raised varnish detail" loading="lazy" className="w-full h-full object-cover" width={800} height={450} />
+            </div>
+          </Link>
+          <Link to="/category/$slug" params={{ slug: "letterheads" }} className="bg-wine rounded-3xl p-8 bento-drop relative overflow-hidden group">
+            <div className="relative z-10">
+              <h3 className="text-white text-2xl font-display font-bold">Cotton Series</h3>
+              <p className="text-white/60 text-sm mt-2">600gsm Letterpress Stock</p>
+              <span className="mt-6 text-gold text-sm font-bold flex items-center gap-2">
+                Explore Materials
+                <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              </span>
+            </div>
+            <div className="absolute -bottom-10 -right-10 size-48 bg-gold/10 rounded-full blur-3xl" />
+          </Link>
+        </div>
       </div>
 
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {CATEGORIES.map((c, i) => (
-          <motion.div
-            key={c.slug}
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.7, delay: i * 0.06, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <Link
-              to="/shop"
-              className="group relative block aspect-[4/5] rounded-3xl border border-border overflow-hidden p-8 hover:border-gold/40 transition-colors"
-            >
-              <div className="absolute inset-0 bg-black">
-                <img src={c.image} alt={c.name} className="w-full h-full object-cover opacity-60 transition-transform duration-700 group-hover:scale-105 group-hover:opacity-80" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+      {/* Category chips */}
+      <div className="flex flex-wrap gap-3 my-12 justify-center">
+        {chips.map((c) => (
+          <Link key={c} to="/shop" className="px-6 py-2.5 rounded-full border border-burgundy/10 text-burgundy font-medium text-sm hover:border-burgundy transition-colors bg-white">
+            {c}
+          </Link>
+        ))}
+      </div>
+
+      {/* Featured categories */}
+      <section className="py-12">
+        <div className="flex items-end justify-between mb-10 gap-6">
+          <div>
+            <h2 className="font-display text-3xl md:text-4xl font-bold text-burgundy">Featured categories</h2>
+            <p className="text-ink/60 mt-2">Every touchpoint of your brand, considered.</p>
+          </div>
+          <Link to="/categories" className="text-sm font-bold text-gold underline underline-offset-4 shrink-0">All categories</Link>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+          {featured.map((c) => (
+            <Link key={c.slug} to="/category/$slug" params={{ slug: c.slug }} className="group">
+              <div className="aspect-square rounded-2xl overflow-hidden bg-white bento-drop border border-burgundy/5">
+                <img src={c.image} alt={c.name} loading="lazy" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
               </div>
-              <div className="relative h-full flex flex-col justify-between text-white">
-                <span className="text-xs text-white/60">0{i + 1}</span>
-                <div>
-                  <div className="font-display text-3xl mb-2 group-hover:translate-x-1 transition-transform">{c.name}</div>
-                  <p className="text-sm text-white/80 max-w-[22ch]">{c.blurb}</p>
-                </div>
+              <div className="mt-3">
+                <p className="text-sm font-semibold text-burgundy truncate">{c.name}</p>
+                <p className="text-[10px] uppercase tracking-widest text-ink/40 mt-0.5">{c.productCount} products</p>
               </div>
             </Link>
-          </motion.div>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function Process() {
-  const steps = [
-    { n: "01", h: "You upload", t: "Send artwork or commission ours. AI-assisted prepress checks bleed, color and resolution in seconds." },
-    { n: "02", h: "We compose", t: "A real human prepares plates. Proofs are photographed and sent within 24 hours." },
-    { n: "03", h: "Press runs", t: "Letterpress, foil, digital, or offset — selected to suit the piece, never the margin." },
-    { n: "04", h: "Pack & dispatch", t: "Wrapped in glassine, boxed, shipped worldwide. Tracked from press to door." },
-  ];
-  return (
-    <section className="bg-card/40 border-y border-border">
-      <div className="max-w-7xl mx-auto px-6 py-32">
-        <div className="text-xs uppercase tracking-widest text-primary mb-3 font-semibold">02 — Process</div>
-        <h2 className="font-display text-5xl md:text-6xl leading-[1.05] max-w-2xl mb-16">
-          Four steps. No shortcuts.
-        </h2>
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-px bg-border">
-          {steps.map((s, i) => (
-            <motion.div
-              key={s.n}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: i * 0.1 }}
-              className="bg-background p-8 min-h-[280px] flex flex-col justify-between hover:bg-card transition-colors"
-            >
-              <span className="font-display text-5xl text-gold-gradient">{s.n}</span>
-              <div>
-                <div className="font-display text-2xl mb-2">{s.h}</div>
-                <p className="text-sm text-muted-foreground">{s.t}</p>
-              </div>
-            </motion.div>
           ))}
         </div>
-      </div>
-    </section>
-  );
-}
+      </section>
 
-function Featured() {
-  const picks = PRODUCTS.slice(0, 4);
-  return (
-    <section className="max-w-7xl mx-auto px-6 py-32">
-      <div className="flex items-end justify-between flex-wrap gap-6 mb-14">
-        <div>
-          <div className="text-xs uppercase tracking-widest text-primary mb-3 font-semibold">03 — Selected works</div>
-          <h2 className="font-display text-5xl md:text-6xl leading-[1.05] max-w-2xl">
-            New from the press.
+      {/* Bestsellers */}
+      <section className="py-12">
+        <div className="flex items-end justify-between mb-10 gap-6">
+          <div>
+            <h2 className="font-display text-3xl md:text-4xl font-bold text-burgundy">Best-sellers</h2>
+            <p className="text-ink/60 mt-2">The foundations of brand identity.</p>
+          </div>
+          <Link to="/shop" className="text-sm font-bold text-gold underline underline-offset-4 shrink-0">View all products</Link>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          {bestsellers.map((p) => <ProductCard key={p.slug} product={p} />)}
+        </div>
+      </section>
+
+      {/* Services strip */}
+      <section className="grid sm:grid-cols-3 gap-6 my-16">
+        {[
+          { icon: Sparkles, title: "Free file review", desc: "A production artist checks every file before we press." },
+          { icon: Truck, title: "Rush production", desc: "Next-day dispatch on our most requested stationery." },
+          { icon: Award, title: "Sustainable defaults", desc: "FSC papers and soy-based inks across the range." },
+        ].map((s) => (
+          <div key={s.title} className="bg-white rounded-2xl p-6 bento-drop border border-burgundy/5 flex items-start gap-4">
+            <div className="size-11 rounded-full bg-gold/10 grid place-items-center text-gold shrink-0">
+              <s.icon className="h-5 w-5" />
+            </div>
+            <div className="min-w-0">
+              <h4 className="font-display font-bold text-burgundy">{s.title}</h4>
+              <p className="text-sm text-ink/60 mt-1">{s.desc}</p>
+            </div>
+          </div>
+        ))}
+      </section>
+
+      {/* New arrivals */}
+      <section className="py-12">
+        <div className="flex items-end justify-between mb-10 gap-6">
+          <div>
+            <h2 className="font-display text-3xl md:text-4xl font-bold text-burgundy">New arrivals</h2>
+            <p className="text-ink/60 mt-2">Fresh off the press.</p>
+          </div>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          {arrivals.map((p) => <ProductCard key={p.slug} product={p} />)}
+        </div>
+      </section>
+
+      {/* Trust bar */}
+      <div className="bg-burgundy text-white rounded-[2rem] p-8 md:p-10 mt-20 grid md:grid-cols-2 gap-8 md:gap-12 relative overflow-hidden foil-shimmer">
+        <div className="z-10">
+          <p className="text-gold font-bold text-xs tracking-widest uppercase mb-4">The master's promise</p>
+          <h2 className="font-display text-3xl md:text-4xl font-bold leading-tight max-w-lg">
+            Print shouldn't just be seen. <br /><span className="italic text-white/90">It must be felt.</span>
           </h2>
         </div>
+        <div className="grid grid-cols-2 gap-8 z-10 self-center">
+          <div><span className="block text-3xl font-display font-bold text-gold">100%</span><span className="text-xs text-white/50 uppercase tracking-widest">Sustainably sourced</span></div>
+          <div><span className="block text-3xl font-display font-bold text-gold">24h</span><span className="text-xs text-white/50 uppercase tracking-widest">Expert review</span></div>
+          <div><span className="block text-3xl font-display font-bold text-gold">30+</span><span className="text-xs text-white/50 uppercase tracking-widest">Countries served</span></div>
+          <div><span className="block text-3xl font-display font-bold text-gold">4.9★</span><span className="text-xs text-white/50 uppercase tracking-widest">Average rating</span></div>
+        </div>
       </div>
-      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {picks.map((p, i) => (
-          <motion.div
-            key={p.slug}
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.6, delay: i * 0.08 }}
-          >
-            <Link
-              to="/shop/$slug"
-              params={{ slug: p.slug }}
-              className="group block"
-            >
-              <div className="aspect-[4/5] rounded-2xl border border-border bg-card/60 overflow-hidden mb-4 relative">
-                <motion.div whileHover={{ scale: 1.04 }} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }} className="absolute inset-0">
-                  <img src={p.image} alt={p.name} className="w-full h-full object-cover" />
-                </motion.div>
-              </div>
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <div className="font-display text-lg leading-tight group-hover:text-primary transition-colors">{p.name}</div>
-                  <p className="text-xs text-muted-foreground mt-1">{p.tagline}</p>
-                </div>
-                <span className="text-sm whitespace-nowrap">from ₹{p.basePrice}</span>
-              </div>
-            </Link>
-          </motion.div>
-        ))}
-      </div>
-    </section>
-  );
-}
 
-function CTA() {
-  return (
-    <section className="max-w-7xl mx-auto px-6 py-24">
-      <div className="relative rounded-3xl border border-border p-12 md:p-20 overflow-hidden">
-        <div className="absolute inset-0 -z-10 opacity-60"
-          style={{ background: "radial-gradient(60% 80% at 80% 20%, color-mix(in oklab, var(--primary) 18%, transparent), transparent 60%)" }} />
-        <div className="max-w-3xl">
-          <h3 className="font-display text-4xl md:text-6xl leading-[1.05]">
-            Press something <span className="italic text-gold-gradient">unforgettable</span>.
-          </h3>
-          <p className="mt-6 text-muted-foreground max-w-xl">
-            Whether it's a hundred wedding invitations or a thousand catalogues, we'd love to print it.
-          </p>
-          <div className="mt-10 flex flex-wrap gap-3">
-            <Link to="/shop" className="px-6 py-3.5 rounded-full bg-primary text-white font-medium hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20">
-              Start your order
+      {/* Testimonials */}
+      <section className="py-20">
+        <div className="text-center mb-12">
+          <p className="text-gold font-bold text-xs tracking-widest uppercase mb-3">Kind words</p>
+          <h2 className="font-display text-3xl md:text-4xl font-bold text-burgundy">From studios we've pressed for</h2>
+        </div>
+        <div className="grid md:grid-cols-3 gap-6">
+          {TESTIMONIALS.map((t) => (
+            <div key={t.name} className="bg-white rounded-2xl p-8 bento-drop border border-burgundy/5">
+              <p className="text-gold text-2xl leading-none">"</p>
+              <blockquote className="text-ink/80 mt-3 leading-relaxed">{t.quote}</blockquote>
+              <div className="mt-6 pt-6 border-t border-burgundy/5">
+                <div className="font-display font-bold text-burgundy text-sm">{t.name}</div>
+                <div className="text-xs text-ink/50 mt-0.5">{t.role}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="py-16 grid md:grid-cols-[1fr_2fr] gap-10">
+        <div>
+          <p className="text-gold font-bold text-xs tracking-widest uppercase mb-3">Questions</p>
+          <h2 className="font-display text-3xl md:text-4xl font-bold text-burgundy leading-tight">Everything you need to know before we press.</h2>
+          <Link to="/faq" className="mt-6 inline-block text-sm font-bold text-gold underline underline-offset-4">All FAQs</Link>
+        </div>
+        <div className="space-y-3">
+          {FAQS.slice(0, 4).map((f) => (
+            <details key={f.q} className="group bg-white rounded-2xl px-6 py-5 border border-burgundy/5">
+              <summary className="cursor-pointer list-none flex items-center justify-between gap-4">
+                <span className="font-display font-bold text-burgundy">{f.q}</span>
+                <span className="text-gold text-xl group-open:rotate-45 transition-transform">+</span>
+              </summary>
+              <p className="mt-3 text-ink/60 text-sm leading-relaxed">{f.a}</p>
+            </details>
+          ))}
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="my-16 bg-ink rounded-[2rem] p-10 md:p-16 text-center relative overflow-hidden">
+        <div className="absolute -top-24 -right-24 size-80 rounded-full bg-burgundy/40 blur-3xl" />
+        <div className="absolute -bottom-24 -left-24 size-80 rounded-full bg-gold/20 blur-3xl" />
+        <div className="relative z-10 max-w-2xl mx-auto">
+          <p className="text-gold font-bold text-xs tracking-widest uppercase mb-4">Bespoke project?</p>
+          <h2 className="font-display text-3xl md:text-5xl font-bold text-white leading-tight">Let's talk about what you want people to feel.</h2>
+          <div className="mt-8 flex flex-wrap gap-3 justify-center">
+            <Link to="/quote" className="inline-flex items-center gap-2 bg-gold text-white px-8 py-4 rounded-full font-bold text-sm tracking-widest uppercase hover:bg-white hover:text-burgundy transition-all">
+              Request a quote <ArrowRight className="h-4 w-4" />
             </Link>
-            <Link to="/contact" className="px-6 py-3.5 rounded-full border border-border hover:bg-black/5 transition-colors text-sm">
-              Talk to the press
+            <Link to="/contact" className="inline-flex items-center gap-2 border border-white/20 text-white px-8 py-4 rounded-full font-bold text-sm tracking-widest uppercase hover:bg-white/10 transition-all">
+              Contact us
             </Link>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </div>
   );
 }
